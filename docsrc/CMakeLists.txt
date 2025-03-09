@@ -1,4 +1,4 @@
-IF(DOXYGEN_FOUND AND Python_Interpreter_FOUND)
+IF(BUILD_DOCS AND DOXYGEN_FOUND AND Python_Interpreter_FOUND)
     execute_process(COMMAND ${DOXYGEN_EXECUTABLE} --version
                   OUTPUT_VARIABLE DOXYGEN_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
 
@@ -45,23 +45,23 @@ IF(DOXYGEN_FOUND AND Python_Interpreter_FOUND)
             ${DOCDIR}/vigra/documents/tutorial_reference.pdf
         COMMENT "Postprocessing html files")
 
+        # create fallback index.html that simply refers to the online documentation
+        file(MAKE_DIRECTORY ${DOCDIR}/vigra)
+        file(GLOB INDEX_HTML_EXISTS ${DOCDIR}/vigra/index.html)
+        configure_file(vigra-icon.ico ${DOCDIR}/vigra/vigra-icon.ico COPYONLY)
+        if(NOT INDEX_HTML_EXISTS)
+            configure_file(index_fallback.html ${DOCDIR}/vigra/index.html COPYONLY)
+            configure_file(vigra.css ${DOCDIR}/vigra/vigra.css COPYONLY)
+        endif()
+
+        INSTALL(DIRECTORY ${DOCDIR}/
+            DESTINATION ${DOCINSTALL}/)
+
 ELSE()
     ADD_CUSTOM_TARGET (doc_cpp
         COMMAND ${CMAKE_COMMAND} -E echo
             \"Cannot generate C++ documentation -- doxygen or Python not found.\")
 
 ENDIF()
-
-# create fallback index.html that simply refers to the online documentation
-file(MAKE_DIRECTORY ${DOCDIR}/vigra)
-file(GLOB INDEX_HTML_EXISTS ${DOCDIR}/vigra/index.html)
-configure_file(vigra-icon.ico ${DOCDIR}/vigra/vigra-icon.ico COPYONLY)
-if(NOT INDEX_HTML_EXISTS)
-    configure_file(index_fallback.html ${DOCDIR}/vigra/index.html COPYONLY)
-    configure_file(vigra.css ${DOCDIR}/vigra/vigra.css COPYONLY)
-endif()
-
-INSTALL(DIRECTORY ${DOCDIR}/
-         DESTINATION ${DOCINSTALL}/)
 
 ADD_DEPENDENCIES(doc doc_cpp)

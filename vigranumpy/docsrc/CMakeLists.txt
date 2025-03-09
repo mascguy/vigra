@@ -1,4 +1,4 @@
-IF(PYTHON_SPHINX)
+IF(BUILD_DOCS AND PYTHON_SPHINX)
     # vigranumpy documentation generation using sphinx
     IF(DEFINED VIGRANUMPY_DOCDIR)
         MESSAGE(SEND_ERROR "VIGRANUMPY_DOCDIR already defined! Please delete from Cache.")
@@ -81,7 +81,7 @@ IF(PYTHON_SPHINX)
     ADD_DEPENDENCIES(doc_python vigranumpy)
     ADD_DEPENDENCIES(doc_python doc_cpp)
 
-ELSE(PYTHON_SPHINX)
+ELSE(BUILD_DOCS AND PYTHON_SPHINX)
     # no vigranumpy documentation if sphinx not available
     ADD_CUSTOM_TARGET (doc_python
         ${CMAKE_COMMAND} -E echo

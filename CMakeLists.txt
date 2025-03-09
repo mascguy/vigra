@@ -292,9 +292,8 @@ IF(BUILD_TESTS)
     ADD_SUBDIRECTORY(test)
 ENDIF()
 
-IF(BUILD_DOCS)
-    ADD_SUBDIRECTORY(docsrc)
-ENDIF()
+# Unconditionally add docsrc, it will properly handle BUILD_DOCS=OFF
+ADD_SUBDIRECTORY(docsrc)
 
 IF(WITH_VIGRANUMPY)
     ADD_SUBDIRECTORY(vigranumpy)
